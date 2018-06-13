@@ -8,7 +8,7 @@
  * @author Stuart Sequeira
  * 
  */
-class SugarVersion extends SugarCommunication {
+class SuiteVersion extends SuiteCommunication {
 
     protected $version_url;
 
@@ -29,16 +29,16 @@ class SugarVersion extends SugarCommunication {
     protected function build_response_messages() {
 
         $this->response_messages = array(
-            'successful_20x_status' => __( 'I was successful getting an version response from Sugar', 'ninja-forms-sugar-crm' ),
-            'missing_data' => __( 'I communicated with Sugar but could not retrieve a valid version.', 'ninja-forms-sugar-crm' ),
-            'wp_error_status' => __( 'WordPress had an internal error trying to request available versions from Sugar', 'ninja-forms-sugar-crm' ),
-            'wp_error_last_update' => 'class-sugar-version.process_wp_error',
-            'unsuccessful_400_status' => __( 'My request for available versions was rejected by Sugar for the following reason:', 'ninja-forms-sugar-crm' ),
-            'unsuccessful_400_last_update' => 'class-sugar-version.process_bad_request_400',
-            'unhandled_response_code_status' => __( 'Unknown error whle trying to retrive Sugar version', 'ninja-forms-sugar-crm' ),
-            'unhandled_response_code_last_update' => 'class-sugar-version.process_version_response',
-            'parameter_gatekeeper_status' => __( 'Missing parameters for Version', 'ninja-forms-sugar-crm' ),
-            'parameter_gatekeeper_last_update' => 'class-sugar-version.process_failed_parameter_gatekeeper',
+            'successful_20x_status' => __( 'I was successful getting an version response from Suite', 'ninja-forms-suite-crm' ),
+            'missing_data' => __( 'I communicated with Suite but could not retrieve a valid version.', 'ninja-forms-suite-crm' ),
+            'wp_error_status' => __( 'WordPress had an internal error trying to request available versions from Suite', 'ninja-forms-suite-crm' ),
+            'wp_error_last_update' => 'class-suite-version.process_wp_error',
+            'unsuccessful_400_status' => __( 'My request for available versions was rejected by Suite for the following reason:', 'ninja-forms-suite-crm' ),
+            'unsuccessful_400_last_update' => 'class-suite-version.process_bad_request_400',
+            'unhandled_response_code_status' => __( 'Unknown error whle trying to retrive Suite version', 'ninja-forms-suite-crm' ),
+            'unhandled_response_code_last_update' => 'class-suite-version.process_version_response',
+            'parameter_gatekeeper_status' => __( 'Missing parameters for Version', 'ninja-forms-suite-crm' ),
+            'parameter_gatekeeper_last_update' => 'class-suite-version.process_failed_parameter_gatekeeper',
         );
     }
 

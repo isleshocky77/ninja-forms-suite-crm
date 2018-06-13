@@ -12,7 +12,7 @@
  * @author Stuart Sequeira
  * 
  */
-class SugarDescribeObject extends SugarCommunication {
+class SuiteDescribeObject extends SuiteCommunication {
 
     protected $object_description;
 
@@ -34,15 +34,15 @@ class SugarDescribeObject extends SugarCommunication {
     protected function build_response_messages() {
 
         $this->response_messages = array(
-            'successful_20x_status' => __( 'I was successful describing an object', 'ninja-forms-sugar-crm' ),
-            'wp_error_status' => __( 'WordPress had an internal error trying to retrive a field list from Sugar', 'ninja-forms-sugar-crm' ),
-            'wp_error_last_update' => 'class-sugar-describe-object.process_wp_error',
-            'unsuccessful_400_status' => __( 'My request for describing an object was rejected by Sugar for the following reason:', 'ninja-forms-sugar-crm' ),
-            'unsuccessful_400_last_update' => 'class-sugar-describe-object.process_bad_request_400',
-            'unhandled_response_code_status' => __( 'Unhandled error code provided by Sugar.  See raw data for details', 'ninja-forms-sugar-crm' ),
-            'unhandled_response_code_last_update' => 'class-sugar-describe-object.process_unhandled_response_codes',
-            'parameter_gatekeeper_status' => __( 'Missing parameters for describing an object', 'ninja-forms-sugar-crm' ),
-            'parameter_gatekeeper_last_update' => 'class-sugar-describe-object.process_failed_parameter_gatekeeper',
+            'successful_20x_status' => __( 'I was successful describing an object', 'ninja-forms-suite-crm' ),
+            'wp_error_status' => __( 'WordPress had an internal error trying to retrive a field list from Suite', 'ninja-forms-suite-crm' ),
+            'wp_error_last_update' => 'class-suite-describe-object.process_wp_error',
+            'unsuccessful_400_status' => __( 'My request for describing an object was rejected by Suite for the following reason:', 'ninja-forms-suite-crm' ),
+            'unsuccessful_400_last_update' => 'class-suite-describe-object.process_bad_request_400',
+            'unhandled_response_code_status' => __( 'Unhandled error code provided by Suite.  See raw data for details', 'ninja-forms-suite-crm' ),
+            'unhandled_response_code_last_update' => 'class-suite-describe-object.process_unhandled_response_codes',
+            'parameter_gatekeeper_status' => __( 'Missing parameters for describing an object', 'ninja-forms-suite-crm' ),
+            'parameter_gatekeeper_last_update' => 'class-suite-describe-object.process_failed_parameter_gatekeeper',
         );
     }
 

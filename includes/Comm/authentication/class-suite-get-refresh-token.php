@@ -19,7 +19,7 @@
  * @author Stuart Sequeira
  * 
  */
-class SugarRefreshToken extends SugarCommunication {
+class SuiteRefreshToken extends SuiteCommunication {
 
     protected $client_id, $client_secret, $authorization_code;
     protected $refresh_token;
@@ -42,22 +42,22 @@ class SugarRefreshToken extends SugarCommunication {
     protected function build_response_messages() {
 
         $this->response_messages = array(
-            'successful_20x_status' => __( 'I was successful generating a refresh token', 'ninja-forms-sugar-crm' ),
-            'wp_error_status' => __( 'WordPress had an internal error trying to generate a refresh token', 'ninja-forms-sugar-crm' ),
-            'wp_error_last_update' => 'class-sugar-get-refresh-token.process_wp_error',
-            'unsuccessful_400_status' => __( 'My request for getting a refresh token was rejected by Sugar for the following reason:', 'ninja-forms-sugar-crm' ),
-            'unsuccessful_400_last_update' => 'class-sugar-get-refresh-token.process_bad_request_400',
-            'unhandled_response_code_status' => __( 'Unhandled error code provided by Sugar.  See raw data for details', 'ninja-forms-sugar-crm' ),
-            'unhandled_response_code_last_update' => 'class-sugar-get-refresh-token.process_unhandled_response_codes',
-            'parameter_gatekeeper_status' => __( 'Missing parameters for generating a refresh token', 'ninja-forms-sugar-crm' ),
-            'parameter_gatekeeper_last_update' => 'class-sugar-get-refresh-token.process_failed_parameter_gatekeeper',
+            'successful_20x_status' => __( 'I was successful generating a refresh token', 'ninja-forms-suite-crm' ),
+            'wp_error_status' => __( 'WordPress had an internal error trying to generate a refresh token', 'ninja-forms-suite-crm' ),
+            'wp_error_last_update' => 'class-suite-get-refresh-token.process_wp_error',
+            'unsuccessful_400_status' => __( 'My request for getting a refresh token was rejected by Suite for the following reason:', 'ninja-forms-suite-crm' ),
+            'unsuccessful_400_last_update' => 'class-suite-get-refresh-token.process_bad_request_400',
+            'unhandled_response_code_status' => __( 'Unhandled error code provided by Suite.  See raw data for details', 'ninja-forms-suite-crm' ),
+            'unhandled_response_code_last_update' => 'class-suite-get-refresh-token.process_unhandled_response_codes',
+            'parameter_gatekeeper_status' => __( 'Missing parameters for generating a refresh token', 'ninja-forms-suite-crm' ),
+            'parameter_gatekeeper_last_update' => 'class-suite-get-refresh-token.process_failed_parameter_gatekeeper',
         );
     }
 
     protected function build_url() {
         
-        $nfsugarcrm_connection = apply_filters('nfsugarcrm_set_connection_type','login');
-        $this->url = 'https://'.$nfsugarcrm_connection.'.sugar.com/services/oauth2/token';
+        $nfsuitecrm_connection = apply_filters('nfsuitecrm_set_connection_type','login');
+        $this->url = 'https://'.$nfsuitecrm_connection.'.suite.com/services/oauth2/token';
         ;
 
         return;
@@ -65,13 +65,13 @@ class SugarRefreshToken extends SugarCommunication {
 
     protected function build_final_http_args() {
         
-        $nfsugarcrm_connection = apply_filters('nfsugarcrm_set_connection_type','login');
+        $nfsuitecrm_connection = apply_filters('nfsuitecrm_set_connection_type','login');
         
         $body = array(
             'grant_type' => 'authorization_code',
             'client_id' => $this->client_id,
             'client_secret' => $this->client_secret,
-            'redirect_uri' => 'https://'.$nfsugarcrm_connection.'.sugar.com/services/oauth2/success',
+            'redirect_uri' => 'https://'.$nfsuitecrm_connection.'.suite.com/services/oauth2/success',
             'code' => $this->authorization_code
         );
 

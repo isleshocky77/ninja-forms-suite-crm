@@ -1,14 +1,14 @@
 {
-  "name": "isleshocky77/ninja-forms-sugar-crm",
-  "description": "Wordpress plugin and Ninja Forms add-on which allows you to save form data to SugarCrm.",
+  "name": "isleshocky77/ninja-forms-suite-crm",
+  "description": "Wordpress plugin and Ninja Forms add-on which allows you to save form data to SuiteCrm.",
   "keywords": [
     "wordpress",
     "plugin",
     "ninja-forms",
-    "sugar-crm",
+    "suite-crm",
     "suite-crm"
   ],
-  "homepage": "https://github.com/isleshocky77/ninja-forms-sugar-crm",
+  "homepage": "https://github.com/isleshocky77/ninja-forms-suite-crm",
   "license": "GPL3",
   "authors": [
     {

@@ -10,7 +10,7 @@
  *  returns access_token
  * @author Stuart Sequeira
  */
-class SugarAccessToken extends SugarCommunication {
+class SuiteAccessToken extends SuiteCommunication {
 
     protected $instance_url;
     protected $access_token;
@@ -28,16 +28,16 @@ class SugarAccessToken extends SugarCommunication {
     protected function build_response_messages() {
 
         $this->response_messages = array(
-            'successful_20x_status' => __( 'I was successful getting an access token response from Sugar', 'ninja-forms-sugar-crm' ),
-            'missing_data' => __( 'I communicated successfully with Sugar but could not find the access token and instance', 'ninja-forms-sugar-crm' ),
-            'wp_error_status' => __( 'WordPress had an internal error trying to request an access token from Sugar', 'ninja-forms-sugar-crm' ),
-            'wp_error_last_update' => 'class-sugar-access-token.process_wp_error',
-            'unsuccessful_400_status' => __( 'My request for an access token was rejected by Sugar for the following reason:', 'ninja-forms-sugar-crm' ),
-            'unsuccessful_400_last_update' => 'class-sugar-access-token.process_bad_request_400',
-            'unhandled_response_code_status' => __( 'Unhandled error code provided by Sugar.  See raw data for details', 'ninja-forms-sugar-crm' ),
-            'unhandled_response_code_last_update' => 'class-sugar-access-token.process_unhandled_response_codes',
-            'parameter_gatekeeper_status' => __( 'Missing parameters for Access Token', 'ninja-forms-sugar-crm' ),
-            'parameter_gatekeeper_last_update' => 'class-sugar-access-token.process_failed_parameter_gatekeeper',
+            'successful_20x_status' => __( 'I was successful getting an access token response from Suite', 'ninja-forms-suite-crm' ),
+            'missing_data' => __( 'I communicated successfully with Suite but could not find the access token and instance', 'ninja-forms-suite-crm' ),
+            'wp_error_status' => __( 'WordPress had an internal error trying to request an access token from Suite', 'ninja-forms-suite-crm' ),
+            'wp_error_last_update' => 'class-suite-access-token.process_wp_error',
+            'unsuccessful_400_status' => __( 'My request for an access token was rejected by Suite for the following reason:', 'ninja-forms-suite-crm' ),
+            'unsuccessful_400_last_update' => 'class-suite-access-token.process_bad_request_400',
+            'unhandled_response_code_status' => __( 'Unhandled error code provided by Suite.  See raw data for details', 'ninja-forms-suite-crm' ),
+            'unhandled_response_code_last_update' => 'class-suite-access-token.process_unhandled_response_codes',
+            'parameter_gatekeeper_status' => __( 'Missing parameters for Access Token', 'ninja-forms-suite-crm' ),
+            'parameter_gatekeeper_last_update' => 'class-suite-access-token.process_failed_parameter_gatekeeper',
         );
     }
 
@@ -58,8 +58,8 @@ class SugarAccessToken extends SugarCommunication {
 
     protected function build_url() {
 
-        $nfsugarcrm_connection = apply_filters('nfsugarcrm_set_connection_type','login');
-        $this->url = 'https://'.$nfsugarcrm_connection.'.sugar.com/services/oauth2/token'; // URL for requesting access token
+        $nfsuitecrm_connection = apply_filters('nfsuitecrm_set_connection_type','login');
+        $this->url = 'https://'.$nfsuitecrm_connection.'.suite.com/services/oauth2/token'; // URL for requesting access token
     }
 
     protected function extract_data_from_response_body() {

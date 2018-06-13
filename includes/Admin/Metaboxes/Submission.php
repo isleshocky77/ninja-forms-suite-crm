@@ -1,14 +1,14 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit;
 
-final class NF_SugarCRM_Admin_Metaboxes_Submission extends NF_Abstracts_SubmissionMetabox
+final class NF_SuiteCRM_Admin_Metaboxes_Submission extends NF_Abstracts_SubmissionMetabox
 {
     public function __construct()
     {
         parent::__construct();
 
-        $this->_title = __( 'Sugar Crm', 'ninja-forms' );
+        $this->_title = __( 'Suite Crm', 'ninja-forms' );
 
-        if( $this->sub && ! $this->sub->get_extra_value( 'nfsugarcrm' ) ){
+        if( $this->sub && ! $this->sub->get_extra_value( 'nfsuitecrm' ) ){
             remove_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
         }
     }
@@ -17,16 +17,16 @@ final class NF_SugarCRM_Admin_Metaboxes_Submission extends NF_Abstracts_Submissi
     {
         echo "<dl>";
 
-        foreach ($this->sub->get_extra_value( 'nfsugarcrm' ) as $object => $id) {
+        foreach ($this->sub->get_extra_value( 'nfsuitecrm' ) as $object => $id) {
 
             echo "<dt>";
-            echo __( $object, "ninja-forms-sugar-crm" );
+            echo __( $object, "ninja-forms-suite-crm" );
             echo "</dt>";
 
             echo "<dd>";
             printf( '<a href="%s" target="_blank">%s</a>',
                 sprintf('%s?module=%s&action=DetailView&record=%s',
-                    Ninja_Forms()->get_setting('nfsugarcrm_url'),
+                    Ninja_Forms()->get_setting('nfsuitecrm_url'),
                     $object,
                     $id
                 ),

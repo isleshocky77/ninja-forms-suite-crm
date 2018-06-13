@@ -14,7 +14,7 @@
  * @author Stuart Sequeira
  * 
  */
-class SugarDuplicateCheck extends SugarCommunication {
+class SuiteDuplicateCheck extends SuiteCommunication {
 
     protected $object_name , $field_name , $field_value;
     protected $query_string;
@@ -40,15 +40,15 @@ class SugarDuplicateCheck extends SugarCommunication {
     protected function build_response_messages() {
 
         $this->response_messages = array(
-            'successful_20x_status' => __( 'I was successful checking for duplicates', 'ninja-forms-sugar-crm' ),
-            'wp_error_status' => __( 'WordPress had an internal error trying to check for duplicates', 'ninja-forms-sugar-crm' ),
-            'wp_error_last_update' => 'class-sugar-check-for-duplicate.process_wp_error',
-            'unsuccessful_400_status' => __( 'My request to check for duplicates was rejected by Sugar for the following reason:', 'ninja-forms-sugar-crm' ),
-            'unsuccessful_400_last_update' => 'class-sugar-check-for-duplicate.process_bad_request_400',
-            'unhandled_response_code_status' => __( 'Unhandled error code provided by Sugar.  See raw data for details', 'ninja-forms-sugar-crm' ),
-            'unhandled_response_code_last_update' => 'class-sugar-check-for-duplicate.process_unhandled_response_codes',
-            'parameter_gatekeeper_status' => __( 'Missing parameters for performing duplicate check', 'ninja-forms-sugar-crm' ),
-            'parameter_gatekeeper_last_update' => 'class-sugar-check-for-duplicate.process_failed_parameter_gatekeeper',
+            'successful_20x_status' => __( 'I was successful checking for duplicates', 'ninja-forms-suite-crm' ),
+            'wp_error_status' => __( 'WordPress had an internal error trying to check for duplicates', 'ninja-forms-suite-crm' ),
+            'wp_error_last_update' => 'class-suite-check-for-duplicate.process_wp_error',
+            'unsuccessful_400_status' => __( 'My request to check for duplicates was rejected by Suite for the following reason:', 'ninja-forms-suite-crm' ),
+            'unsuccessful_400_last_update' => 'class-suite-check-for-duplicate.process_bad_request_400',
+            'unhandled_response_code_status' => __( 'Unhandled error code provided by Suite.  See raw data for details', 'ninja-forms-suite-crm' ),
+            'unhandled_response_code_last_update' => 'class-suite-check-for-duplicate.process_unhandled_response_codes',
+            'parameter_gatekeeper_status' => __( 'Missing parameters for performing duplicate check', 'ninja-forms-suite-crm' ),
+            'parameter_gatekeeper_last_update' => 'class-suite-check-for-duplicate.process_failed_parameter_gatekeeper',
         );
     }
 

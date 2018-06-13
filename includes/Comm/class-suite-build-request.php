@@ -5,7 +5,7 @@
  *
  * @author Stuart Sequeira
  */
-class SugarBuildRequest {
+class SuiteBuildRequest {
 
     protected $field_array; // incoming field array from $ninja_forms_processing->get_all_fields()
     protected $unprioritized_request_array;
@@ -15,7 +15,7 @@ class SugarBuildRequest {
     protected $duplicate_check_array; // array(
     //          [object_name] =>array( 
     //              array(
-    //                  'sugar_field' => xxx,
+    //                  'suite_field' => xxx,
     //                  'user_value' => xxx
     //              )
     //          )
@@ -57,12 +57,12 @@ class SugarBuildRequest {
      * object will be linked to the newly created object
      * 
      */
-    public function link_child_objects($sugar_object, $new_record_id) {
+    public function link_child_objects($suite_object, $new_record_id) {
 
 
-        if (isset($this->child_object_array [$sugar_object]) && is_array($this->child_object_array[$sugar_object])) {
+        if (isset($this->child_object_array [$suite_object]) && is_array($this->child_object_array[$suite_object])) {
 
-            foreach ($this->child_object_array[$sugar_object] as $child_object => $field_link) {
+            foreach ($this->child_object_array[$suite_object] as $child_object => $field_link) {
 
                 if (isset($this->request_array[$child_object])) {
                     $this->request_array[$child_object][$field_link] = $new_record_id;
@@ -93,7 +93,7 @@ class SugarBuildRequest {
             'CampaignMember'=>'50',
         );
 
-        $this->object_order_array = apply_filters('nfsugarcrm_filter_object_order', $default_object_order_array);
+        $this->object_order_array = apply_filters('nfsuitecrm_filter_object_order', $default_object_order_array);
     }
 
     /**
@@ -130,7 +130,7 @@ class SugarBuildRequest {
             )
         );
 
-        $this->child_object_array = apply_filters('nfsugarcrm_filter_child_object_array', $default_child_object_array);
+        $this->child_object_array = apply_filters('nfsuitecrm_filter_child_object_array', $default_child_object_array);
     }
 
     /**
@@ -149,7 +149,7 @@ class SugarBuildRequest {
             $field = ninja_forms_get_field_by_id($field_id);
 
             // Check that field map is set; if not, continue on to next field
-            if (!isset($field['data']['nfsugarcrm_field_map']) || 'None' == $field['data']['nfsugarcrm_field_map']) {
+            if (!isset($field['data']['nfsuitecrm_field_map']) || 'None' == $field['data']['nfsuitecrm_field_map']) {
                 continue;
             }
 
@@ -166,30 +166,30 @@ class SugarBuildRequest {
 
             $raw_form_value = $this->strip_html_tags($field['form_field']);
 
-            $field['data']['nfsugarcrm_field_map'] = $field['field_map'];
+            $field['data']['nfsuitecrm_field_map'] = $field['field_map'];
 
             if ($field['special_instructions'] == 'DuplicateCheck') {
 
-                $field['data']['nfsugarcrm_duplicate_check'] = 1;
+                $field['data']['nfsuitecrm_duplicate_check'] = 1;
             } else {
 
-                $field['data']['nfsugarcrm_duplicate_check'] = 0;
+                $field['data']['nfsuitecrm_duplicate_check'] = 0;
             }
 
             if ($field['special_instructions'] == 'DateInterval') {
 
-                $field['data']['nfsugarcrm_date_interval'] = 1;
+                $field['data']['nfsuitecrm_date_interval'] = 1;
             } else {
 
-                $field['data']['nfsugarcrm_date_interval'] = 0;
+                $field['data']['nfsuitecrm_date_interval'] = 0;
             }
 
             if ($field['special_instructions'] == 'DateFormat') {
 
-                $field['data']['nfsugarcrm_date_format'] = 1;
+                $field['data']['nfsuitecrm_date_format'] = 1;
             } else {
 
-                $field['data']['nfsugarcrm_date_format'] = 0;
+                $field['data']['nfsuitecrm_date_format'] = 0;
             }
 
             if ($field['special_instructions'] == 'FileUpload') {
@@ -218,7 +218,7 @@ class SugarBuildRequest {
 
         $form_value = $raw_form_value; // initialize
         
-        $keep_tags = apply_filters('nfsugarcrm_keep_html_tags', FALSE);
+        $keep_tags = apply_filters('nfsuitecrm_keep_html_tags', FALSE);
 
         if (!$keep_tags) {
             $decoded = html_entity_decode($raw_form_value);
@@ -239,11 +239,11 @@ class SugarBuildRequest {
     protected function process_field($field, $raw_form_value) {
 
         // extract ojbect and field
-        $map_args = $this->extract_object_and_field_map($field['data']['nfsugarcrm_field_map']);
+        $map_args = $this->extract_object_and_field_map($field['data']['nfsuitecrm_field_map']);
 
         $object = $map_args['object'];
 
-        $sugar_field = $map_args['sugar_field'];
+        $suite_field = $map_args['suite_field'];
 
         // set field args
         $field_args = $this->extract_field_settings($field);
@@ -252,11 +252,11 @@ class SugarBuildRequest {
         // validate form value
         $validated_form_value = $this->validate_raw_form_value($raw_form_value, $field_args);
 
-        $this->unprioritized_request_array[$object][$sugar_field] = $validated_form_value;
+        $this->unprioritized_request_array[$object][$suite_field] = $validated_form_value;
 
         // Check that duplicate field check is set to true; if not, continue on to next field
-        if (!isset($field['data']['nfsugarcrm_duplicate_check']) ||
-                0 == $field['data']['nfsugarcrm_duplicate_check']) {
+        if (!isset($field['data']['nfsuitecrm_duplicate_check']) ||
+                0 == $field['data']['nfsuitecrm_duplicate_check']) {
             return; // was continue when in a single method
         }
 
@@ -266,7 +266,7 @@ class SugarBuildRequest {
          * 
          */
         $this->duplicate_check_array[$object][] = array(
-            'sugar_field' => $sugar_field,
+            'suite_field' => $suite_field,
             'user_value' => $validated_form_value
         );
     }
@@ -295,7 +295,7 @@ class SugarBuildRequest {
 
             case '_upload':
 
-                if ('POST3' != NFSUGARCRM_MODE) {
+                if ('POST3' != NFSUITECRM_MODE) {
                     $file_array = reset($raw_form_value); // get the first keyed array
                     if (isset($file_array['file_url'])) {
                         $filename = $file_array['file_url'];
@@ -306,7 +306,7 @@ class SugarBuildRequest {
                     /*
                      * Extract contents from href link
                      */
-                    $contents = nfsugarcrm_extract_upload_contents($raw_form_value);
+                    $contents = nfsuitecrm_extract_upload_contents($raw_form_value);
 
                     if ($contents) {
                         $validated_form_value = base64_encode($contents);
@@ -322,7 +322,7 @@ class SugarBuildRequest {
 
             $date = new DateTime(); // get a timestamp
 
-            $date_format = apply_filters('nfsugarcrm_filter_date_interval_format', 'Y-m-d');
+            $date_format = apply_filters('nfsuitecrm_filter_date_interval_format', 'Y-m-d');
             date_add($date, date_interval_create_from_date_string($validated_form_value));
 
             $validated_form_value = $date->format($date_format);
@@ -330,7 +330,7 @@ class SugarBuildRequest {
 
         if (isset($field_args['date_format']) && 1 == $field_args['date_format']) {
 
-            $date_format = apply_filters('nfsugarcrm_filter_date_interval_format', 'Y-m-d');
+            $date_format = apply_filters('nfsuitecrm_filter_date_interval_format', 'Y-m-d');
 
             $original_date = strtotime($raw_form_value);
 
@@ -352,11 +352,11 @@ class SugarBuildRequest {
 
             $build_request_array['debug']['build_request'][] = array(
                 'heading' => 'Form Design Issue:',
-                'value' => 'No fields were selected to map to Sugar in the most recent request'
+                'value' => 'No fields were selected to map to Suite in the most recent request'
             );
-            $build_request_array['status'][] = __('No fields were submitted in the last request', 'ninja-forms-sugar-crm');
+            $build_request_array['status'][] = __('No fields were submitted in the last request', 'ninja-forms-suite-crm');
 
-            nfsugarcrm_update_comm_data($build_request_array);
+            nfsuitecrm_update_comm_data($build_request_array);
 
             return false;
         }
@@ -420,20 +420,20 @@ class SugarBuildRequest {
         /*
          * Boolean to calculate as a date interval
          */
-        if (isset($field['data']['nfsugarcrm_date_interval'])) {
+        if (isset($field['data']['nfsuitecrm_date_interval'])) {
 
-            $field_args['date_interval'] = $field['data']['nfsugarcrm_date_interval'];
+            $field_args['date_interval'] = $field['data']['nfsuitecrm_date_interval'];
         } else {
 
-            $field['data']['nfsugarcrm_date_interval'] = 0;
+            $field['data']['nfsuitecrm_date_interval'] = 0;
         }
 
         /*
-         * Boolean to format as date per Sugar API requirements
+         * Boolean to format as date per Suite API requirements
          */
-        if (isset($field['data']['nfsugarcrm_date_format'])) {
+        if (isset($field['data']['nfsuitecrm_date_format'])) {
 
-            $field_args['date_format'] = $field['data']['nfsugarcrm_date_format'];
+            $field_args['date_format'] = $field['data']['nfsuitecrm_date_format'];
         } else {
 
             $field['data']['date_format'] = 0;
@@ -444,7 +444,7 @@ class SugarBuildRequest {
     /**
      * Receives a string of the map argument set by the field registration
      * 
-     * Explodes the map argument into a sugar object and a sugar field
+     * Explodes the map argument into a suite object and a suite field
      * 
      * @param string $map_args
      * @return array
@@ -456,12 +456,12 @@ class SugarBuildRequest {
 
         $object = $exploded_map_args[0];
 
-        $sugar_field = $exploded_map_args[1];
+        $suite_field = $exploded_map_args[1];
 
 
         $return_array = array(
             'object' => $object,
-            'sugar_field' => $sugar_field
+            'suite_field' => $suite_field
         );
 
         return $return_array;

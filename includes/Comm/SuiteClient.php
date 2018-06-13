@@ -1,7 +1,7 @@
 <?php
 
 
-class SugarClient extends \League\OAuth1\Client\Server\Server
+class SuiteClient extends \League\OAuth1\Client\Server\Server
 {
 
     /**

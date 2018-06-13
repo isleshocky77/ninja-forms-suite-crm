@@ -15,7 +15,7 @@
  * @author Stuart Sequeira
  * 
  */
-abstract class SugarCommunication {
+abstract class SuiteCommunication {
 
     protected $url;
     protected $default_http_args;
@@ -56,9 +56,9 @@ abstract class SugarCommunication {
 
         $this->build_url(); // each request builds its own url to specifications
 
-        $this->retrieve_request(); // send the request to Sugar
+        $this->retrieve_request(); // send the request to Suite
 
-        $this->process_request(); // handles Sugar's response
+        $this->process_request(); // handles Suite's response
     }
 
     abstract protected function extract_needed_parameters();
@@ -127,7 +127,7 @@ abstract class SugarCommunication {
                 'status' => $this->status,
                 'debug' => array(
                     array(
-                        'heading' => 'Raw Response from Sugar',
+                        'heading' => 'Raw Response from Suite',
                         'value' => serialize( $this->raw_response )
                     ),
                     array(
@@ -160,7 +160,7 @@ abstract class SugarCommunication {
                 'status' => $this->status,
                 'debug' => array(
                     array(
-                        'heading' => 'Raw Response from Sugar',
+                        'heading' => 'Raw Response from Suite',
                         'value' => serialize( $this->raw_response )
                     ),
                     array(
@@ -212,7 +212,7 @@ abstract class SugarCommunication {
     private function process_forbidden_403() {
 
         $this->result = 'failure';
-        $this->status = __('Sugar has not enabled communication for your account.  Please check with your Sugar representative', 'ninja-forms-sugar-crm'); // initialize
+        $this->status = __('Suite has not enabled communication for your account.  Please check with your Suite representative', 'ninja-forms-suite-crm'); // initialize
         $last_comm_update = $this->response_messages[ 'unhandled_response_code_last_update' ]; // initialize
 
         if(isset($this->response_messages[ 'unsuccessful_403_status' ])){
@@ -221,7 +221,7 @@ abstract class SugarCommunication {
             $last_comm_update = $this->response_messages[ 'unsuccessful_403_last_update' ];
         }
         
-        $error_details = __( 'Code: ', 'ninja-forms-sugar-crm' ) . $this->raw_response[ 'response' ][ 'code' ];
+        $error_details = __( 'Code: ', 'ninja-forms-suite-crm' ) . $this->raw_response[ 'response' ][ 'code' ];
         $error_details .= ' - ' . $this->raw_response[ 'response' ][ 'message' ];
 
         $this->processed_result_array = array(
@@ -230,11 +230,11 @@ abstract class SugarCommunication {
                 'status' => $this->status,
                 'debug' => array(
                     array(
-                        'heading' => __( 'Error Code Details:', 'ninja-forms-sugar-crm' ),
+                        'heading' => __( 'Error Code Details:', 'ninja-forms-suite-crm' ),
                         'value' => $error_details
                     ),
                     array(
-                        'heading' => 'Raw Response from Sugar',
+                        'heading' => 'Raw Response from Suite',
                         'value' => serialize( $this->raw_response )
                     ),
                     array(
@@ -252,7 +252,7 @@ abstract class SugarCommunication {
         $this->status = $this->response_messages[ 'unhandled_response_code_status' ];
         $last_comm_update = $this->response_messages[ 'unhandled_response_code_last_update' ];
 
-        $error_details = __( 'Code: ', 'ninja-forms-sugar-crm' ) . $this->raw_response[ 'response' ][ 'code' ];
+        $error_details = __( 'Code: ', 'ninja-forms-suite-crm' ) . $this->raw_response[ 'response' ][ 'code' ];
         $error_details .= ' - ' . $this->raw_response[ 'response' ][ 'message' ];
 
         $this->processed_result_array = array(
@@ -261,11 +261,11 @@ abstract class SugarCommunication {
                 'status' => $this->status,
                 'debug' => array(
                     array(
-                        'heading' => __( 'Error Code Details:', 'ninja-forms-sugar-crm' ),
+                        'heading' => __( 'Error Code Details:', 'ninja-forms-suite-crm' ),
                         'value' => $error_details
                     ),
                     array(
-                        'heading' => 'Raw Response from Sugar',
+                        'heading' => 'Raw Response from Suite',
                         'value' => serialize( $this->raw_response )
                     ),
                     array(

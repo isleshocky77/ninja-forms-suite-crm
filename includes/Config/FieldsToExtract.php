@@ -11,7 +11,7 @@ return array(
     'special_instructions',// Drop down of special instructions for the field
     //  'duplicate_check', // check this field for duplicates?
     //  'date_interval', // is this field a date interval?
-    //  'date_format', // format this field for Sugar date format?
+    //  'date_format', // format this field for Suite date format?
 );
 
 

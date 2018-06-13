@@ -10,12 +10,12 @@ if (!defined('ABSPATH') || !class_exists('NF_Abstracts_Action'))
 /**
  * Class NF_Action_InsightlyCRMExample
  */
-final class NF_SugarCRM_Actions_AddToSugar extends NF_Abstracts_Action {
+final class NF_SuiteCRM_Actions_AddToSuite extends NF_Abstracts_Action {
 
     /**
      * @var string
      */
-    protected $_name = 'addtosugar'; // child CRM
+    protected $_name = 'addtosuite'; // child CRM
 
     /**
      * @var array
@@ -33,7 +33,7 @@ final class NF_SugarCRM_Actions_AddToSugar extends NF_Abstracts_Action {
     protected $_priority = '10';
 
     /**
-     * The availalble Sugar fields for mapping
+     * The availalble Suite fields for mapping
      * @var array
      */
     protected $field_map_array;
@@ -52,7 +52,7 @@ final class NF_SugarCRM_Actions_AddToSugar extends NF_Abstracts_Action {
 
     /**
      *
-     * @var array Request array used to build the Sugar Request Object
+     * @var array Request array used to build the Suite Request Object
      */
     protected $request_array;
 
@@ -74,10 +74,10 @@ final class NF_SugarCRM_Actions_AddToSugar extends NF_Abstracts_Action {
     public function __construct() {
         parent::__construct();
 
-        $this->_nicename = __('Add To Sugar', 'ninja-forms');
+        $this->_nicename = __('Add To Suite', 'ninja-forms');
 
         // build the dropdown array
-        $this->field_map_array = nfsugarcrm_build_sugar_field_list();
+        $this->field_map_array = nfsuitecrm_build_suite_field_list();
 
         add_action('admin_init', array($this, 'init_settings'));
         add_action('ninja_forms_builder_templates', array($this, 'builder_templates'));
@@ -98,7 +98,7 @@ final class NF_SugarCRM_Actions_AddToSugar extends NF_Abstracts_Action {
 
         $this->setup_api();
 
-        foreach ($action_settings['sugar_field_map'] as $field_array)
+        foreach ($action_settings['suite_field_map'] as $field_array)
         {
             if (empty($field_array['field_map'])) {
                 continue;
@@ -145,7 +145,7 @@ final class NF_SugarCRM_Actions_AddToSugar extends NF_Abstracts_Action {
                         'rest_data' => json_encode($rest_data)
                     ]]);
             } catch (Exception $e) {
-                nfsugarcrm_update_comm_data([
+                nfsuitecrm_update_comm_data([
                     'status' => 'Error connecting to API:' .  $e->getMessage(),
                     'debug' => 'Error connecting to API:' .  $e->getMessage(),
                 ]);
@@ -154,7 +154,7 @@ final class NF_SugarCRM_Actions_AddToSugar extends NF_Abstracts_Action {
             if (isset($response) && $response) {
                 $object = json_decode((string)$response->getBody());
 
-                $data['extra']['nfsugarcrm'][$module_name] = $object->id;
+                $data['extra']['nfsuitecrm'][$module_name] = $object->id;
             }
         }
 
@@ -162,29 +162,29 @@ final class NF_SugarCRM_Actions_AddToSugar extends NF_Abstracts_Action {
     }
 
     public function builder_templates() {
-        NF_SugarCRM::template('custom-field-map-row.html');
+        NF_SuiteCRM::template('custom-field-map-row.html');
     }
 
     public function init_settings() {
 
-        $settings = NF_SugarCRM::config('ActionFieldMapSettings');
+        $settings = NF_SuiteCRM::config('ActionFieldMapSettings');
         $this->_settings = array_merge($this->_settings, $settings);
 
         $field_dropdown = $this->build_field_map_dropdown($this->field_map_array);
 
         $this->_settings['field_map']['columns']['field_map']['options'] = $field_dropdown;
 
-        $special_instructions = NF_SugarCRM::config('SpecialInstructions');
+        $special_instructions = NF_SuiteCRM::config('SpecialInstructions');
         $this->_settings['field_map']['columns']['special_instructions']['options'] = $special_instructions;
 
-        $this->fields_to_extract = NF_SugarCRM::config('FieldsToExtract');
+        $this->fields_to_extract = NF_SuiteCRM::config('FieldsToExtract');
     }
 
     protected function extract_field_data($action_settings) {
 
         $this->request_array = array();  // initialize
 
-        $field_map_data = $action_settings['sugar_field_map']; // matches option repeater 'name'
+        $field_map_data = $action_settings['suite_field_map']; // matches option repeater 'name'
 
         if (!is_array($field_map_data)) {
             return; // stop if no array
@@ -263,15 +263,15 @@ final class NF_SugarCRM_Actions_AddToSugar extends NF_Abstracts_Action {
         $middleware = new Oauth1([
             'request_method'    => Oauth1::REQUEST_METHOD_QUERY,
             'signature_method'  => Oauth1::SIGNATURE_METHOD_HMAC,
-            'consumer_key'      => Ninja_Forms()->get_setting('nfsugarcrm_consumer_key'),
-            'consumer_secret'   => Ninja_Forms()->get_setting('nfsugarcrm_consumer_secret'),
-            'token'             => Ninja_Forms()->get_setting('nfsugarcrm_access_token'),
-            'token_secret'      => Ninja_Forms()->get_setting('nfsugarcrm_access_token_secret'),
+            'consumer_key'      => Ninja_Forms()->get_setting('nfsuitecrm_consumer_key'),
+            'consumer_secret'   => Ninja_Forms()->get_setting('nfsuitecrm_consumer_secret'),
+            'token'             => Ninja_Forms()->get_setting('nfsuitecrm_access_token'),
+            'token_secret'      => Ninja_Forms()->get_setting('nfsuitecrm_access_token_secret'),
         ]);
         $stack->push($middleware);
 
         $this->api_client = new Client([
-            'base_uri' => Ninja_Forms()->get_setting('nfsugarcrm_url'),
+            'base_uri' => Ninja_Forms()->get_setting('nfsuitecrm_url'),
             'handler' => $stack,
             'auth' => 'oauth',
         ]);
@@ -287,7 +287,7 @@ final class NF_SugarCRM_Actions_AddToSugar extends NF_Abstracts_Action {
                     'method' => 'oauth_access',
                 ]]);
         } catch (Exception $e) {
-            nfsugarcrm_update_comm_data([
+            nfsuitecrm_update_comm_data([
                 'status' => 'Error connecting to API:' .  $e->getMessage(),
                 'debug' => 'Error connecting to API:' .  $e->getMessage(),
             ]);
@@ -346,7 +346,7 @@ EOQ;
                     'rest_data' => json_encode($rest_data)
                 ]]);
         } catch (Exception $e) {
-            nfsugarcrm_update_comm_data([
+            nfsuitecrm_update_comm_data([
                 'status' => 'Error connecting to API:' . $e->getMessage(),
                 'debug' => 'Error connecting to API:' . $e->getMessage(),
             ]);

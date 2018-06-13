@@ -4,13 +4,13 @@ if (!defined('ABSPATH'))
     exit;
 
 /*
- * Plugin Name: Ninja Forms - Sugar CRM
- * Plugin URI: http://github.com/isleshocky77/ninja-form-sugar-crm
- * Description: Sugar Extension connecting Ninja Forms to your SugarCRM (6.5) or SuiteCRM Account
+ * Plugin Name: Ninja Forms - Suite CRM
+ * Plugin URI: http://github.com/isleshocky77/ninja-form-suite-crm
+ * Description: Suite Extension connecting Ninja Forms to your SuiteCRM (6.5) or SuiteCRM Account
  * Version: 3.2.0
  * Author: Stephen Ostrow
  * Author URI: https://github.com/isleshocky77
- * Text Domain: ninja-forms-sugar-crm
+ * Text Domain: ninja-forms-suite-crm
  *
  * Copyright 2016 Stuart Sequeira.
  * Copyright 2017 Stephen Ostrow.
@@ -22,40 +22,40 @@ if (version_compare(get_option('ninja_forms_version', '0.0.0'), '3.0.0', '<') ||
 
 } else {
 
-    // define Sugar mode as POST3
-    if (!defined('NFSUGARCRM_MODE')) {
+    // define Suite mode as POST3
+    if (!defined('NFSUITECRM_MODE')) {
         /**
          * @var string Which NF version is used - POST3 is for all 3.0+
          */
-        define('NFSUGARCRM_MODE', 'POST3');
+        define('NFSUITECRM_MODE', 'POST3');
     }
 
     /*
      * Include shared functions
      */
     include_once 'includes/Admin/Functions.php';
-    include_once 'includes/Admin/sugar-object-refresh.php';
-    include_once 'includes/Admin/sugar-api-parameters.php';
-    include_once 'includes/Admin/build-sugar-field-list.php';
+    include_once 'includes/Admin/suite-object-refresh.php';
+    include_once 'includes/Admin/suite-api-parameters.php';
+    include_once 'includes/Admin/build-suite-field-list.php';
 
     /**
-     * Class NF_SugarCRM
+     * Class NF_SuiteCRM
      */
-    final class NF_SugarCRM {
+    final class NF_SuiteCRM {
 
         const VERSION = '3.3.0';
-        const SLUG = 'sugar-crm';
-        const NAME = 'Sugar CRM';
+        const SLUG = 'suite-crm';
+        const NAME = 'Suite CRM';
         const AUTHOR = 'Stephen Ostrow';
-        const PREFIX = 'NF_SugarCRM';
+        const PREFIX = 'NF_SuiteCRM';
 
         /**
-         * @var string ID of Sugar settings section for redirects
+         * @var string ID of Suite settings section for redirects
          */
-        const BOOKMARK = 'ninja_forms_metabox_sugarcrm_settings';
+        const BOOKMARK = 'ninja_forms_metabox_suitecrm_settings';
 
         /**
-         * @var NF_SugarCRM
+         * @var NF_SuiteCRM
          * @since 3.0
          */
         private static $instance;
@@ -85,12 +85,12 @@ if (version_compare(get_option('ninja_forms_version', '0.0.0'), '3.0.0', '<') ||
          * @since 3.0
          * @static
          * @static var array $instance
-         * @return NF_SugarCRM Highlander Instance
+         * @return NF_SuiteCRM Highlander Instance
          */
         public static function instance() {
 
-            if (!isset(self::$instance) && !(self::$instance instanceof NF_SugarCRM)) {
-                self::$instance = new NF_SugarCRM();
+            if (!isset(self::$instance) && !(self::$instance instanceof NF_SuiteCRM)) {
+                self::$instance = new NF_SuiteCRM();
 
                 self::$dir = plugin_dir_path(__FILE__);
 
@@ -110,7 +110,7 @@ if (version_compare(get_option('ninja_forms_version', '0.0.0'), '3.0.0', '<') ||
              * load the global variables
              * function in Admin/Functions.php
              */
-            nfsugar_load_globals();
+            nfsuite_load_globals();
 
             /*
              * Set up Licensing
@@ -143,7 +143,7 @@ if (version_compare(get_option('ninja_forms_version', '0.0.0'), '3.0.0', '<') ||
         public function register_actions($actions) {
 
             // key needs to match $_name property from action
-            $actions['addtosugar'] = new NF_SugarCRM_Actions_AddToSugar();
+            $actions['addtosuite'] = new NF_SuiteCRM_Actions_AddToSuite();
 
             return $actions;
         }
@@ -168,25 +168,25 @@ if (version_compare(get_option('ninja_forms_version', '0.0.0'), '3.0.0', '<') ||
             if (!is_admin())
                 return;
 
-            new NF_SugarCRM_Admin_Settings();
-            new NF_SugarCRM_Admin_Metaboxes_Submission();
+            new NF_SuiteCRM_Admin_Settings();
+            new NF_SuiteCRM_Admin_Metaboxes_Submission();
         }
 
         public function load_classes() {
 
-            NF_SugarCRM::file_include('Comm', 'class-sugar-build-request');
-            NF_SugarCRM::file_include('Comm', 'class-sugar-communication');
+            NF_SuiteCRM::file_include('Comm', 'class-suite-build-request');
+            NF_SuiteCRM::file_include('Comm', 'class-suite-communication');
 
-            NF_SugarCRM::file_include('Comm/authentication', 'class-sugar-security-credentials');
-            NF_SugarCRM::file_include('Comm/authentication', 'class-sugar-get-refresh-token');
-            NF_SugarCRM::file_include('Comm/authentication', 'class-sugar-access-token');
-            NF_SugarCRM::file_include('Comm/authentication', 'class-sugar-version');
+            NF_SuiteCRM::file_include('Comm/authentication', 'class-suite-security-credentials');
+            NF_SuiteCRM::file_include('Comm/authentication', 'class-suite-get-refresh-token');
+            NF_SuiteCRM::file_include('Comm/authentication', 'class-suite-access-token');
+            NF_SuiteCRM::file_include('Comm/authentication', 'class-suite-version');
 
 
-            NF_SugarCRM::file_include('Comm/request', 'class-sugar-describe-object');
-            NF_SugarCRM::file_include('Comm/request', 'class-sugar-list-of-objects');
-            NF_SugarCRM::file_include('Comm/request', 'class-sugar-post-new-record');
-            NF_SugarCRM::file_include('Comm/request', 'class-sugar-check-for-duplicate');
+            NF_SuiteCRM::file_include('Comm/request', 'class-suite-describe-object');
+            NF_SuiteCRM::file_include('Comm/request', 'class-suite-list-of-objects');
+            NF_SuiteCRM::file_include('Comm/request', 'class-suite-post-new-record');
+            NF_SuiteCRM::file_include('Comm/request', 'class-suite-check-for-duplicate');
 
 
             include self::$dir . 'vendor/autoload.php';
@@ -255,9 +255,9 @@ if (version_compare(get_option('ninja_forms_version', '0.0.0'), '3.0.0', '<') ||
          *
          * @return array Array of the Account data
          */
-        public function get_nfsugarcrm_account_data() {
+        public function get_nfsuitecrm_account_data() {
 
-            $data = get_option('nfsugarcrm_account_data');
+            $data = get_option('nfsuitecrm_account_data');
 
             return $data;
         }
@@ -266,9 +266,9 @@ if (version_compare(get_option('ninja_forms_version', '0.0.0'), '3.0.0', '<') ||
          *
          * @return array Array of the communication data
          */
-        public function get_nfsugarcrm_comm_data() {
+        public function get_nfsuitecrm_comm_data() {
 
-            $data = get_option('nfsugarcrm_comm_data');
+            $data = get_option('nfsuitecrm_comm_data');
 
             return $data;
         }
@@ -277,7 +277,7 @@ if (version_compare(get_option('ninja_forms_version', '0.0.0'), '3.0.0', '<') ||
          * Modify the comm data global
          *
          * This doesn't write to the database to minimize db calls.  Rather,
-         * use update_nfsugarcrm_comm_data to write to the db.  If there
+         * use update_nfsuitecrm_comm_data to write to the db.  If there
          * is a point where error can halt or branch; run an update to store
          * the last known data.
          *
@@ -285,33 +285,33 @@ if (version_compare(get_option('ninja_forms_version', '0.0.0'), '3.0.0', '<') ||
          * @param string $value Value to update in comm data
          * @param bool $append Add to nested array to preserve previous data
          */
-        public function modify_nfsugarcrm_comm_data($key = '', $value = '', $append = false) {
+        public function modify_nfsuitecrm_comm_data($key = '', $value = '', $append = false) {
 
             if (0 < strlen($key) || 0 < strlen($value)) {
 //                return;
             }
 
             if ($append) {
-                $count = count($this->nfsugarcrm_comm_data[$key]);
+                $count = count($this->nfsuitecrm_comm_data[$key]);
 
                 if (3 < $count) {
 
-                    array_shift($this->nfsugarcrm_comm_data[$key]);
+                    array_shift($this->nfsuitecrm_comm_data[$key]);
                 }
 
-                $this->nfsugarcrm_comm_data[$key][] = $value;
+                $this->nfsuitecrm_comm_data[$key][] = $value;
             } else {
 
-                $this->nfsugarcrm_comm_data[$key] = $value;
+                $this->nfsuitecrm_comm_data[$key] = $value;
             }
         }
 
         /**
          * Write the current global comm data to the database
          */
-        public function update_nfsugarcrm_comm_data() {
+        public function update_nfsuitecrm_comm_data() {
 
-            update_option('nfsugarcrm_comm_data', $this->nfsugarcrm_comm_data);
+            update_option('nfsuitecrm_comm_data', $this->nfsuitecrm_comm_data);
         }
 
     }
@@ -326,22 +326,22 @@ if (version_compare(get_option('ninja_forms_version', '0.0.0'), '3.0.0', '<') ||
      * @since 3.0
      * @return {class} Highlander Instance
      */
-    function NF_SugarCRM() {
-        return NF_SugarCRM::instance();
+    function NF_SuiteCRM() {
+        return NF_SuiteCRM::instance();
     }
 
-    NF_SugarCRM();
+    NF_SuiteCRM();
 }
 
 /**
  *
  * @return array A lookup array keyed on the stored value to replace with the proper label
  */
-function nfsugarcrm_build_field_lookup_array(){
+function nfsuitecrm_build_field_lookup_array(){
 
     $lookup_array = array(); // initialize
 
-    $field_list = nfsugarcrm_build_sugar_field_list();
+    $field_list = nfsuitecrm_build_suite_field_list();
 
     foreach($field_list as $field){
 

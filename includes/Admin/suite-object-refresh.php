@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Process the submitted form to send the data to Sugar
+ * Process the submitted form to send the data to Suite
  *
  */
 
@@ -9,22 +9,22 @@ use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Subscriber\Oauth\Oauth1;
 
-function nfsugarcrm_refresh_sugar_objects() {
+function nfsuitecrm_refresh_suite_objects() {
 
     $stack = HandlerStack::create();
 
     $middleware = new Oauth1([
         'request_method'    => Oauth1::REQUEST_METHOD_QUERY,
         'signature_method'  => Oauth1::SIGNATURE_METHOD_HMAC,
-        'consumer_key'      => Ninja_Forms()->get_setting('nfsugarcrm_consumer_key'),
-        'consumer_secret'   => Ninja_Forms()->get_setting('nfsugarcrm_consumer_secret'),
-        'token'             => Ninja_Forms()->get_setting('nfsugarcrm_access_token'),
-        'token_secret'      => Ninja_Forms()->get_setting('nfsugarcrm_access_token_secret'),
+        'consumer_key'      => Ninja_Forms()->get_setting('nfsuitecrm_consumer_key'),
+        'consumer_secret'   => Ninja_Forms()->get_setting('nfsuitecrm_consumer_secret'),
+        'token'             => Ninja_Forms()->get_setting('nfsuitecrm_access_token'),
+        'token_secret'      => Ninja_Forms()->get_setting('nfsuitecrm_access_token_secret'),
     ]);
     $stack->push($middleware);
 
     $client = new Client([
-        'base_uri' => Ninja_Forms()->get_setting('nfsugarcrm_url'),
+        'base_uri' => Ninja_Forms()->get_setting('nfsuitecrm_url'),
         'handler' => $stack,
         'auth' => 'oauth',
     ]);
@@ -39,20 +39,20 @@ function nfsugarcrm_refresh_sugar_objects() {
                 'method' => 'get_available_modules',
             ]]);
     } catch (Exception $e) {
-        nfsugarcrm_update_comm_data([
+        nfsuitecrm_update_comm_data([
             'status' => 'Error connecting to API:' .  $e->getMessage(),
             'debug' => 'Error connecting to API:' .  $e->getMessage(),
         ]);
 
-        wp_redirect(admin_url() . 'admin.php?page=nf-settings#'.NF_SugarCRM::BOOKMARK);
+        wp_redirect(admin_url() . 'admin.php?page=nf-settings#'.NF_SuiteCRM::BOOKMARK);
         exit;
     }
 
     $object = json_decode((string) $response->getBody());
 
-    $new_sugar_account_data['object_list'] = [];
+    $new_suite_account_data['object_list'] = [];
     foreach ($object->modules as $module) {
-        $new_sugar_account_data['object_list'][] = $module->module_key;
+        $new_suite_account_data['object_list'][] = $module->module_key;
     }
 
     # Get Session Id
@@ -66,12 +66,12 @@ function nfsugarcrm_refresh_sugar_objects() {
                 'method' => 'oauth_access',
             ]]);
     } catch (Exception $e) {
-        nfsugarcrm_update_comm_data([
+        nfsuitecrm_update_comm_data([
             'status' => 'Error connecting to API:' .  $e->getMessage(),
             'debug' => 'Error connecting to API:' .  $e->getMessage(),
         ]);
 
-        wp_redirect(admin_url() . 'admin.php?page=nf-settings#'.NF_SugarCRM::BOOKMARK);
+        wp_redirect(admin_url() . 'admin.php?page=nf-settings#'.NF_SuiteCRM::BOOKMARK);
         exit;
     }
     $object = json_decode((string) $response->getBody());
@@ -83,9 +83,9 @@ function nfsugarcrm_refresh_sugar_objects() {
      * create a Field List for each object
      *
      */
-    if (isset($nfsugarcrm_settings['nfsugarcrm_available_objects']) && 0 < strlen($nfsugarcrm_settings['nfsugarcrm_available_objects'])) {
+    if (isset($nfsuitecrm_settings['nfsuitecrm_available_objects']) && 0 < strlen($nfsuitecrm_settings['nfsuitecrm_available_objects'])) {
 
-        $available_object_array = explode(',', $nfsugarcrm_settings['nfsugarcrm_available_objects']);
+        $available_object_array = explode(',', $nfsuitecrm_settings['nfsuitecrm_available_objects']);
     } else {
 
         $available_object_array = array('Leads');
@@ -116,24 +116,24 @@ function nfsugarcrm_refresh_sugar_objects() {
                     'rest_data' => json_encode($get_module_fields_parameters)
                 ]]);
         } catch (Exception $e) {
-            nfsugarcrm_update_comm_data([
+            nfsuitecrm_update_comm_data([
                 'status' => 'Error connecting to API:' .  $e->getMessage(),
                 'debug' => 'Error connecting to API:' .  $e->getMessage(),
             ]);
 
-            wp_redirect(admin_url() . 'admin.php?page=nf-settings#'.NF_SugarCRM::BOOKMARK);
+            wp_redirect(admin_url() . 'admin.php?page=nf-settings#'.NF_SuiteCRM::BOOKMARK);
             exit;
         }
         $object = json_decode((string) $response->getBody());
 
         foreach ($object->module_fields as $field) {
-            $new_sugar_account_data['field_list'][$object_name][$field->name] = $field->label;
+            $new_suite_account_data['field_list'][$object_name][$field->name] = $field->label;
         }
 
     }
 
-    nfsugarcrm_update_account_data($new_sugar_account_data);
+    nfsuitecrm_update_account_data($new_suite_account_data);
 
-    wp_redirect(admin_url() . 'admin.php?page=nf-settings#'.NF_SugarCRM::BOOKMARK);
+    wp_redirect(admin_url() . 'admin.php?page=nf-settings#'.NF_SuiteCRM::BOOKMARK);
     exit;
 }
