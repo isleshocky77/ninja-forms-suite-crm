@@ -55,7 +55,7 @@ final class NF_SuiteCRM_Admin_Settings {
     public function plugin_settings($settings) {
 
         $configured_settings = NF_SuiteCRM()->config('PluginSettings');
-        
+
         $configured_settings['nfsuitecrm_refresh_objects_instructions']['html'] = $this->build_refresh_objects_instructions_markup();
 
         $configured_settings['nfsuitecrm_comm_data_status']['html'] = $this->build_status_markup();

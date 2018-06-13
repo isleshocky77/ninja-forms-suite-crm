@@ -6,8 +6,6 @@
  */
 
 use GuzzleHttp\Client;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Subscriber\Oauth\Oauth1;
 
 function nfsuitecrm_refresh_suite_objects() {
 
@@ -70,6 +68,11 @@ function nfsuitecrm_refresh_suite_objects() {
     foreach ($body->meta->modules->list as $moduleName => $moduleMeta) {
         $new_suite_account_data['object_list'][] = $moduleName;
 
+        $objectsToRetrieve = Ninja_Forms()->get_setting('nfsuitecrm_available_objects', 'Leads,Contacts');
+        if (!in_array($moduleName, explode(',', $objectsToRetrieve))) {
+            continue;
+        }
+
         // Get Language
         try {
             $response = $client->request('GET', '/api/v8/modules/' . $moduleName . '/meta/language');
@@ -107,6 +110,12 @@ function nfsuitecrm_refresh_suite_objects() {
             continue;
         }
         foreach ($body->meta->$moduleName->attributes as $field => $fieldAttributes) {
+
+            $allowedType = [ 'bool','date','datetime','email','enum','id','multienum','phone','text','url','varchar'];
+            if (!in_array($fieldAttributes->type, $allowedType)) {
+                continue;
+            }
+
             if (property_exists($fieldAttributes, 'vname') && property_exists($language, $fieldAttributes->vname)) {
                 $new_suite_account_data['field_list'][$moduleName][$fieldAttributes->name] = $language->{$fieldAttributes->vname};
             } else {
