@@ -137,7 +137,6 @@ function nfsuitecrm_output_account_data() {
     if (isset($nfsuitecrm_account_data['object_list'])) {
         $object_list = implode(' , ', $nfsuitecrm_account_data['object_list']);
     } else {
-
         $object_list = __('No Suite object list currently available', 'ninja-forms-suite-crm');
     }
 
@@ -167,7 +166,7 @@ function nfsuitecrm_output_account_data() {
                     ?>
                     <tr valign="top">
                         <th scope="row"><?php echo $object; ?></th>
-                        <td><?php echo implode(' , ', array_keys($list)); ?></td>
+                        <td><?php echo implode(', ', array_keys($list)); ?></td>
                     </tr>
                     <?php
                 }

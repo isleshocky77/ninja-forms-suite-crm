@@ -55,13 +55,7 @@ final class NF_SuiteCRM_Admin_Settings {
     public function plugin_settings($settings) {
 
         $configured_settings = NF_SuiteCRM()->config('PluginSettings');
-
-        $configured_settings['nfsuitecrm_authorization_code_instructions']['html'] = $this->build_authorization_code_markup();
-
-        $configured_settings['nfsuitecrm_refresh_token_instructions']['html'] = $this->build_refresh_token_instructions_markup();
-
-        $configured_settings['nfsuitecrm_refresh_token']['html'] = Ninja_Forms()->get_setting('nfsuitecrm_access_token');
-
+        
         $configured_settings['nfsuitecrm_refresh_objects_instructions']['html'] = $this->build_refresh_objects_instructions_markup();
 
         $configured_settings['nfsuitecrm_comm_data_status']['html'] = $this->build_status_markup();
@@ -94,10 +88,6 @@ final class NF_SuiteCRM_Admin_Settings {
                 'nfsuitecrm_url',
                 'nfsuitecrm_consumer_key',
                 'nfsuitecrm_consumer_secret',
-                'nfsuitecrm_authorization_code_instructions',
-                'nfsuitecrm_authorization_code',
-                'nfsuitecrm_refresh_token_instructions',
-                'nfsuitecrm_refresh_token',
                 'nfsuitecrm_refresh_objects_instructions',
                 'nfsuitecrm_available_objects',
                 'nfsuitecrm_account_data'

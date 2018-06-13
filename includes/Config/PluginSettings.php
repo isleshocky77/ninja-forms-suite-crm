@@ -26,39 +26,6 @@ return apply_filters( 'nf_suite_plugin_settings', array(
     ),
     /*
     |--------------------------------------------------------------------------
-    | Open Auth - authorization code
-    | Retrieved after storing Key and Secret
-    |--------------------------------------------------------------------------
-    */
-    'nfsuitecrm_authorization_code_instructions'=> array(
-        'id'    => 'nfsuitecrm_authorization_code_instructions',
-        'type'  => 'html',
-        'label' => __( 'Authorization Code Setup', 'ninja-forms-suite-crm' ),
-        'html' => '',// created on construction
-    ),
-    'nfsuitecrm_authorization_code' => array(
-        'id'    => 'nfsuitecrm_authorization_code',
-        'type'  => 'textbox',
-        'label' => __( 'Authorization Code', 'ninja-forms-suite-crm' ),
-    ),
-    'nfsuitecrm_refresh_token_instructions'=> array(
-        'id'    => 'nfsuitecrm_refresh_token_instructions',
-        'type'  => 'html',
-        'label' => __( 'Generate Access Token', 'ninja-forms-suite-crm' ),
-        'html' => '',// created on construction
-    ),
-    /*
-     * REFRESH TOKEN, in 3.0 is stored in account data
-     * In 2.9, it is stored with settings by using readonly field
-     */
-    'nfsuitecrm_refresh_token' => array(
-        'id'    => 'nfsuitecrm_refresh_token',
-        'type'  => 'html',
-        'label' => __( 'Access Token', 'ninja-forms-suite-crm' ),
-        'html' => '',// created on construction
-    ),
-    /*
-    |--------------------------------------------------------------------------
     | List of Objects to refresh
     |
     |--------------------------------------------------------------------------
