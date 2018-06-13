@@ -3,8 +3,8 @@
 This is _ninja-forms-suite-crm_. A [Wordpress] plugin and [Ninja Forms][ninja-forms] add-on which 
 allows you to save form data to [Suite Crm][suite-crm]. 
 
-*Note* This was developed, tested, and currently for use with [Suite Crm][suite-crm] 7.9 whose API
-is based around [Suite Crm v6.5 (API v4.1)][suite-crm-6-5-api-docs]
+*Note* This was developed, tested, and currently for use with [Suite Crm][suite-crm] 7.10 whose API
+v8.
 
 ## Configuration ##
 
@@ -45,34 +45,13 @@ is based around [Suite Crm v6.5 (API v4.1)][suite-crm-6-5-api-docs]
 
 # Changelog #
 
-## 3.3 ##
-
-Release: 2018-01-24
-
-Package vendor dependencies
-
-## 3.2 ##
-
-Release: 2017-10-17
-
-Add ability to update records by using duplicate check
-
-
-## 3.1 ##
-
-Release: 2017-10-09
-
-Switch from php-oauth extension to Guzzle with oauth-subscriber
-
 ## 3.0 ##
 
-Release: 2017-10-03
+Release: 2018-06-12
 
 First Version
-Changes ninja-forms-salesforce-crm to work with SuiteCRM (6.5) and SuiteCRM
+Changes ninja-forms-sugar-crm to ninja-forms-suite-crm to work with API v8
 
-
-[suite-crm]: https://www.suitecrm.com/
 [suite-crm]: https://suitecrm.com/
 [ninja-forms]: https://ninjaforms.com/
 [wordpress]: https://wordpress.com/
