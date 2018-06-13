@@ -2,7 +2,7 @@
 
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Subscriber\Oauth\Oauth1;
+use Psr\Http\Message\RequestInterface;
 
 if (!defined('ABSPATH') || !class_exists('NF_Abstracts_Action'))
     exit;
@@ -94,7 +94,7 @@ final class NF_SuiteCRM_Actions_AddToSuite extends NF_Abstracts_Action {
 
     public function process($action_settings, $form_id, $data) {
 
-        $create_objects = [];
+        $createObjects = [];
 
         $this->setup_api();
 
@@ -108,53 +108,36 @@ final class NF_SuiteCRM_Actions_AddToSuite extends NF_Abstracts_Action {
 
             $value = $field_array['form_field'];
 
-            $create_objects[$object][] = [
-                'name' => $field_name,
-                'value' => $value
-            ];
+            $createObjects[$object][$field_name] = $value;
 
             # Check for existing Object using this field
             if (isset($field_array['special_instructions']) && $field_array['special_instructions'] == 'DuplicateCheck') {
                 $id = $this->look_for_id($object, $field_name, $value);
                 if ($id) {
-                    $create_objects[$object][] = [
-                        'name' => 'id',
-                        'value' => $id
-                    ];
+                    $createObjects[$object]['id'] = $id;
                 }
             }
         }
 
-        # Create Item
-        foreach ($create_objects as $module_name => $field_values) {
-
-            $rest_data = [
-                "session" => $this->session_id,
-                "module_name" => $module_name,
-                "name_value_list" => $field_values,
-            ];
-
+        foreach ($createObjects as $objectType => $objectData) {
             try {
-                // Supressing notices until PR https://github.com/guzzle/oauth-subscriber/pull/49
-                $response = @$this->api_client->post('/service/v4_1/rest.php', [
-                    'query' => [
-                        'request_type' => 'JSON',
-                        'response_type' => 'JSON',
-                        'input_type' => 'JSON',
-                        'method' => 'set_entry',
-                        'rest_data' => json_encode($rest_data)
-                    ]]);
+                $response = $this->api_client->request('POST', '/api/v8/modules/' . $objectType, [
+                    'json' => [
+                        'data' => [
+                            'id' => '',
+                            'type' => $objectType,
+                            'attributes' => $objectData,
+                        ],
+                    ],
+                ]);
+                nfsuitecrm_update_comm_data(['status' => 'Success','debug' => 'Success',]);
             } catch (Exception $e) {
                 nfsuitecrm_update_comm_data([
                     'status' => 'Error connecting to API:' .  $e->getMessage(),
                     'debug' => 'Error connecting to API:' .  $e->getMessage(),
                 ]);
-            }
 
-            if (isset($response) && $response) {
-                $object = json_decode((string)$response->getBody());
-
-                $data['extra']['nfsuitecrm'][$module_name] = $object->id;
+                return $data;
             }
         }
 
@@ -258,45 +241,65 @@ final class NF_SuiteCRM_Actions_AddToSuite extends NF_Abstracts_Action {
 
     protected function setup_api()
     {
-        $stack = HandlerStack::create();
-
-        $middleware = new Oauth1([
-            'request_method'    => Oauth1::REQUEST_METHOD_QUERY,
-            'signature_method'  => Oauth1::SIGNATURE_METHOD_HMAC,
-            'consumer_key'      => Ninja_Forms()->get_setting('nfsuitecrm_consumer_key'),
-            'consumer_secret'   => Ninja_Forms()->get_setting('nfsuitecrm_consumer_secret'),
-            'token'             => Ninja_Forms()->get_setting('nfsuitecrm_access_token'),
-            'token_secret'      => Ninja_Forms()->get_setting('nfsuitecrm_access_token_secret'),
-        ]);
-        $stack->push($middleware);
-
-        $this->api_client = new Client([
+        $client = new Client([
             'base_uri' => Ninja_Forms()->get_setting('nfsuitecrm_url'),
-            'handler' => $stack,
-            'auth' => 'oauth',
+            'headers' => [
+                'Content-type' => 'application/vnd.api+json',
+                'Accept' => 'application/vnd.api+json',
+            ],
         ]);
 
-        # Get Session Id
         try {
-            // Supressing notices until PR https://github.com/guzzle/oauth-subscriber/pull/49
-            $response = @$this->api_client->get('/service/v4_1/rest.php', [
-                'query' => [
-                    'request_type' => 'JSON',
-                    'response_type' => 'JSON',
-                    'input_type' => 'JSON',
-                    'method' => 'oauth_access',
-                ]]);
+            $response = $client->request('POST', '/api/oauth/access_token', [
+                'json' => [
+                    'grant_type' => 'client_credentials',
+                    'client_id' => Ninja_Forms()->get_setting('nfsuitecrm_consumer_key'),
+                    'client_secret' => Ninja_Forms()->get_setting('nfsuitecrm_consumer_secret'),
+                    'scope' => 'standard:create',
+                ]
+            ]);
+            nfsuitecrm_update_comm_data(['status' => 'Success','debug' => 'Success',]);
+
+            $accessToken = json_decode($response->getBody()->getContents());
         } catch (Exception $e) {
             nfsuitecrm_update_comm_data([
                 'status' => 'Error connecting to API:' .  $e->getMessage(),
                 'debug' => 'Error connecting to API:' .  $e->getMessage(),
             ]);
+
+            return false;
         }
 
-        if (isset($response) && $response) {
-            $object = json_decode((string)$response->getBody());
-            $this->session_id = $object->id;
+        function correctContentTypeHeader()
+        {
+            return function (callable $handler) {
+                return function (
+                    RequestInterface $request,
+                    array $options
+                ) use ($handler) {
+                    $request = $request
+                        // Have to do this, because using 'json' overrides our header to just application/json
+                        ->withHeader('Content-Type', 'application/vnd.api+json')
+                    ;
+                    return $handler($request, $options);
+                };
+            };
         }
+
+        $stack = HandlerStack::create();
+        $stack->push(correctContentTypeHeader());
+
+        $this->api_client = new Client([
+            'handler' => $stack,
+            'base_uri' => Ninja_Forms()->get_setting('nfsuitecrm_url'),
+            'headers' => [
+                'Content-Type' => 'application/vnd.api+json', # Note: Using 'json' overrides this with application/json
+                'Accept' => 'application/vnd.api+json',
+                'Authorization' => 'Bearer ' . $accessToken->access_token,
+            ],
+        ]);
+
+        return true;
     }
 
     protected function look_for_id($object, $field_name, $value)
