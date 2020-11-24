@@ -45,6 +45,12 @@ v8.
 
 # Changelog #
 
+## 3.3 ##
+
+Release: 2020-11-24
+
+Changes ninja-forms-sugar-crm to ninja-forms-suite-crm to work with API V8 (Capital V8 is different)
+
 ## 3.0 ##
 
 Release: 2018-06-12

@@ -7,7 +7,7 @@ if (!defined('ABSPATH'))
  * Plugin Name: Ninja Forms - Suite CRM
  * Plugin URI: http://github.com/isleshocky77/ninja-form-suite-crm
  * Description: Suite Extension connecting Ninja Forms to your SuiteCRM (6.5) or SuiteCRM Account
- * Version: 3.2.0
+ * Version: 3.3.4
  * Author: Stephen Ostrow
  * Author URI: https://github.com/isleshocky77
  * Text Domain: ninja-forms-suite-crm
@@ -43,7 +43,7 @@ if (version_compare(get_option('ninja_forms_version', '0.0.0'), '3.0.0', '<') ||
      */
     final class NF_SuiteCRM {
 
-        const VERSION = '3.3.0';
+        const VERSION = '3.3.4';
         const SLUG = 'suite-crm';
         const NAME = 'Suite CRM';
         const AUTHOR = 'Stephen Ostrow';
