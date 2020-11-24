@@ -121,10 +121,9 @@ final class NF_SuiteCRM_Actions_AddToSuite extends NF_Abstracts_Action {
 
         foreach ($createObjects as $objectType => $objectData) {
             try {
-                $response = $this->api_client->request('POST', '/api/v8/modules/' . $objectType, [
+                $response = $this->api_client->request('POST', '/Api/V8/module', [
                     'json' => [
                         'data' => [
-                            'id' => '',
                             'type' => $objectType,
                             'attributes' => $objectData,
                         ],
@@ -250,12 +249,11 @@ final class NF_SuiteCRM_Actions_AddToSuite extends NF_Abstracts_Action {
         ]);
 
         try {
-            $response = $client->request('POST', '/api/oauth/access_token', [
+            $response = $client->request('POST', '/Api/access_token', [
                 'json' => [
                     'grant_type' => 'client_credentials',
                     'client_id' => Ninja_Forms()->get_setting('nfsuitecrm_consumer_key'),
                     'client_secret' => Ninja_Forms()->get_setting('nfsuitecrm_consumer_secret'),
-                    'scope' => 'standard:create',
                 ]
             ]);
             nfsuitecrm_update_comm_data(['status' => 'Success','debug' => 'Success',]);

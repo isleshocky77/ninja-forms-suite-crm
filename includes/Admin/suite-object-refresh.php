@@ -18,12 +18,11 @@ function nfsuitecrm_refresh_suite_objects() {
     ]);
 
     try {
-        $response = $client->request('POST', '/api/oauth/access_token', [
+        $response = $client->request('POST', '/Api/access_token', [
             'json' => [
                 'grant_type' => 'client_credentials',
                 'client_id' => Ninja_Forms()->get_setting('nfsuitecrm_consumer_key'),
                 'client_secret' => Ninja_Forms()->get_setting('nfsuitecrm_consumer_secret'),
-                'scope' => 'standard:create',
             ]
         ]);
         nfsuitecrm_update_comm_data(['status' => 'Success','debug' => 'Success',]);
@@ -50,7 +49,7 @@ function nfsuitecrm_refresh_suite_objects() {
     ]);
 
     try {
-        $response = $client->request('GET', '/api/v8/modules/meta/list');
+        $response = $client->request('GET', '/Api/V8/meta/modules');
         nfsuitecrm_update_comm_data(['status' => 'Success','debug' => 'Success',]);
     } catch (Exception $e) {
         nfsuitecrm_update_comm_data([
@@ -65,7 +64,7 @@ function nfsuitecrm_refresh_suite_objects() {
     $body = json_decode((string) $response->getBody());
 
     $new_suite_account_data['object_list'] = [];
-    foreach ($body->meta->modules->list as $moduleName => $moduleMeta) {
+    foreach ($body->data->attributes as $moduleName => $moduleMeta) {
         $new_suite_account_data['object_list'][] = $moduleName;
 
         $objectsToRetrieve = Ninja_Forms()->get_setting('nfsuitecrm_available_objects', 'Leads,Contacts');
@@ -73,26 +72,9 @@ function nfsuitecrm_refresh_suite_objects() {
             continue;
         }
 
-        // Get Language
-        try {
-            $response = $client->request('GET', '/api/v8/modules/' . $moduleName . '/meta/language');
-            nfsuitecrm_update_comm_data(['status' => 'Success','debug' => 'Success',]);
-        } catch (Exception $e) {
-            nfsuitecrm_update_comm_data([
-                'status' => 'Error connecting to API:' . $e->getMessage(),
-                'debug' => 'Error connecting to API:' . $e->getMessage(),
-            ]);
-
-            wp_redirect(admin_url() . 'admin.php?page=nf-settings#'.NF_SuiteCRM::BOOKMARK);
-            exit;
-        }
-
-        $body = json_decode((string) $response->getBody());
-        $language = $body->meta->$moduleName->language;
-
         // Get Fields
         try {
-            $response = $client->request('GET', '/api/v8/modules/' . $moduleName . '/meta/attributes');
+            $response = $client->request('GET', '/Api/V8/meta/fields/' . $moduleName);
             nfsuitecrm_update_comm_data(['status' => 'Success','debug' => 'Success',]);
         } catch (Exception $e) {
             nfsuitecrm_update_comm_data([
@@ -106,21 +88,14 @@ function nfsuitecrm_refresh_suite_objects() {
 
         $body = json_decode((string) $response->getBody());
 
-        if (!is_object($body->meta->$moduleName->attributes) || !property_exists($body->meta->$moduleName->attributes, 'id')) {
-            continue;
-        }
-        foreach ($body->meta->$moduleName->attributes as $field => $fieldAttributes) {
+        foreach ($body->data->attributes as $field => $fieldAttributes) {
 
             $allowedType = [ 'bool','date','datetime','email','enum','id','multienum','phone','text','url','varchar'];
             if (!in_array($fieldAttributes->type, $allowedType)) {
                 continue;
             }
 
-            if (property_exists($fieldAttributes, 'vname') && property_exists($language, $fieldAttributes->vname)) {
-                $new_suite_account_data['field_list'][$moduleName][$fieldAttributes->name] = $language->{$fieldAttributes->vname};
-            } else {
-                $new_suite_account_data['field_list'][$moduleName][$fieldAttributes->name] = $fieldAttributes->name;
-            }
+            $new_suite_account_data['field_list'][$moduleName][$field] = $field;
 
         }
     }
